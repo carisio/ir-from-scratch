@@ -1,5 +1,6 @@
 from collections import Counter
 from tqdm import tqdm
+import json
 import array
 import math
 import pickle
@@ -12,7 +13,7 @@ from nltk.stem import RSLPStemmer
 from unidecode import unidecode
 import string
 
-from formatador import remove_html
+from formatador import remove_html, remove_html_and_numbers
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -36,6 +37,9 @@ def tokenizador_pt(texto):
 
 def tokenizador_pt_remove_html(texto):
     return tokenizador_pt(remove_html(texto))
+
+def tokenizador_pt_remove_html_e_num(texto):
+    return tokenizador_pt(remove_html_and_numbers(texto))
 
 # Definição de uma classe para índice invertido
 class IndiceInvertido:
@@ -62,7 +66,7 @@ class IndiceInvertido:
                 registro = json.loads(linha)
                 id_doc, conteudo_doc = extrai_id_conteudo_json(registro)
                 self.adiciona_doc(id_doc, conteudo_doc)
-                
+        
     def adiciona_dataframe(self, df, extrai_id_conteudo_row):
         for index, row in tqdm(df.iterrows(), total=len(df)):
             id_doc, conteudo_doc = extrai_id_conteudo_row(row)
